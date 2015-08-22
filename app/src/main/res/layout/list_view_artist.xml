@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/ll_list_view"
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:background="@drawable/touch_selector"
+            >
+    <ImageView
+            android:layout_margin="16dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/list_item_icon"
+            android:background="@drawable/music_notes_v2"/>
+
+    <TextView android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="No Name"
+              android:id="@+id/list_view_tv_artist_name" android:textSize="@dimen/list_view_detail_small_text"
+        android:layout_gravity="center_vertical" />
+
+</LinearLayout>
+
+

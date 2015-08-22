@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Spotify Streamer P2</string>
+    <string name="author_name">Brandy Lee Camacho</string>
+    <string name="author">Author</string>
+    <string name="stage">Stage 1</string>
+    <string name="nano_degree">Android NanoDegree</string>
+    <string name="class_of">June 2015 Cohort</string>
+    <string name="artist_search">Input Artist to Search</string>
+    <string name="error_artist_title">There was an error obtain artist title</string>
+    <string name="title_activity_top_ten">TopTenActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_track_player">Track Player</string>
+    <string name="title_activity_dialog_activity_fragment">DialogActivityFragment</string>
+    <string name="share">Share</string>
+</resources>

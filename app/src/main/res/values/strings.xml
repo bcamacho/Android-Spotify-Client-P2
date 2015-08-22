@@ -13,4 +13,9 @@
     <string name="title_activity_track_player">Track Player</string>
     <string name="title_activity_dialog_activity_fragment">DialogActivityFragment</string>
     <string name="share">Share</string>
+    <string name="notifications">Notifications</string>
+    <string name="country_code">Country Code</string>
+    <string name="default_code">Default Code</string>
+    <string name="submit">Submit</string>
+    <string name="cancel">Cancel</string>
 </resources>

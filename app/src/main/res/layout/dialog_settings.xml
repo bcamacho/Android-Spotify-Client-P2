@@ -8,7 +8,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Country Code"
+        android:text="@string/country_code"
         android:id="@+id/tv_country_code"
         android:layout_gravity="center_horizontal" />
 
@@ -20,8 +20,31 @@
 
     <LinearLayout
         android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/notifications"
+            android:id="@+id/textView"
+            android:layout_gravity="center_vertical|right" />
+
+        <ToggleButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Notifications "
+            android:id="@+id/tb_notifications"
+            android:checked="true" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="300dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         style="?android:attr/buttonBarButtonStyle">
 
@@ -29,17 +52,27 @@
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Default Code"
+            android:text="@string/default_code"
             android:id="@+id/btn_default_code"
-            android:layout_weight=".5" />
+            android:layout_weight=".33" />
 
         <Button
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Submit"
+            android:text="@string/submit"
             android:id="@+id/btn_submit"
             android:layout_gravity="center_horizontal"
-            android:layout_weight=".5" />
+            android:layout_weight=".33" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel"
+            android:id="@+id/btn_cancel"
+            android:layout_weight=".33"
+            android:layout_gravity="center_horizontal"
+            style="?android:attr/buttonBarButtonStyle" />
     </LinearLayout>
+
 </LinearLayout>

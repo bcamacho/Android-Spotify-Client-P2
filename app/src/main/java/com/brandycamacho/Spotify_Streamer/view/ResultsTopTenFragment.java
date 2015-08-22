@@ -19,7 +19,6 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 
 import com.brandycamacho.Spotify_Streamer.R;
-import com.brandycamacho.Spotify_Streamer.TrackPlayer;
 import com.brandycamacho.Spotify_Streamer.controller.ArtistTopTracksAdapter;
 import com.brandycamacho.Spotify_Streamer.model.Artist;
 import com.nhaarman.listviewanimations.appearance.simple.SwingRightInAnimationAdapter;

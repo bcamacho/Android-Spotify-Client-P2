@@ -30,7 +30,7 @@
             android:label="@string/title_activity_top_ten" >
         </activity>
         <activity
-            android:name=".TrackPlayer"
+            android:name=".view.TrackPlayer"
             android:label="@string/title_activity_track_player"
             android:windowSoftInputMode="stateAlwaysHidden"
             android:configChanges="keyboardHidden"

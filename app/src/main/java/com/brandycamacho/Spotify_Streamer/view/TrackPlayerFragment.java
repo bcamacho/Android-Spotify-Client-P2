@@ -1,4 +1,4 @@
-package com.brandycamacho.Spotify_Streamer;
+package com.brandycamacho.Spotify_Streamer.view;
 
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -20,6 +20,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.brandycamacho.Spotify_Streamer.R;
 import com.brandycamacho.Spotify_Streamer.controller.AudioService;
 import com.brandycamacho.Spotify_Streamer.model.Artist;
 import com.squareup.picasso.Picasso;
@@ -49,10 +50,10 @@ public class TrackPlayerFragment extends Fragment implements View.OnClickListene
             mDuration = AudioService.getDuration();
             seekbar.setMax(mDuration);
             mTimeLeft = AudioService.getGetCurrentPosition();
-            if (mTimeLeft>1){
+            if (mTimeLeft > 1) {
                 try {
                     progressDialog.dismiss();
-                }catch (Exception e){
+                } catch (Exception e) {
                     // :TODO provide a better solution for progress dialog
                 }
             }
@@ -82,14 +83,7 @@ public class TrackPlayerFragment extends Fragment implements View.OnClickListene
         public void run() {
             Intent i = new Intent("trackPlayerPlayTrack");
             LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(i);
-            // instantiate new progress dialog
-            progressDialog = new ProgressDialog(getActivity());
-            // spinner (wheel) style dialog
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            // better yet - use a string resource getString(R.string.your_message)
-            progressDialog.setMessage("Loading data");
-            // display dialog
-            progressDialog.show();
+            startProgressDialog();
         }
     };
 
@@ -189,7 +183,7 @@ public class TrackPlayerFragment extends Fragment implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
-
+        startProgressDialog();
         int count = mArtistTopTrackList.size() - 1;
         Log.v(TAG, "v.GetId = " + v.getId());
         int currentTrack = AudioService.trackPosition;
@@ -211,6 +205,7 @@ public class TrackPlayerFragment extends Fragment implements View.OnClickListene
                 if (position == count) {
                     Toast.makeText(getActivity(), "Unable to play, you reached the last track", Toast.LENGTH_SHORT).show();
                 } else {
+
                     currentTrack++;
                     stopTrack();
                     playTrack(currentTrack, true);
@@ -310,5 +305,20 @@ public class TrackPlayerFragment extends Fragment implements View.OnClickListene
                 playTrack(position, true);
         }
     };
+
+    private void startProgressDialog() {
+        // instantiate new progress dialog
+        progressDialog = new ProgressDialog(getActivity());
+        // spinner (wheel) style dialog
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        // better yet - use a string resource getString(R.string.your_message)
+        progressDialog.setMessage("Loading data");
+        // display dialog
+        try {
+            progressDialog.show();
+        } catch (Exception e) {
+            Log.v(TAG, String.valueOf(e));
+        }
+    }
 
 }

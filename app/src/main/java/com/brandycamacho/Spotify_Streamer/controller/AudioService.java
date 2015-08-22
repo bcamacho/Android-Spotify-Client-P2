@@ -5,18 +5,20 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import com.brandycamacho.Spotify_Streamer.TrackPlayer;
 import com.brandycamacho.Spotify_Streamer.model.Artist;
+import com.brandycamacho.Spotify_Streamer.view.TrackPlayer;
 
 import java.util.ArrayList;
 
@@ -47,8 +49,14 @@ public class AudioService extends Service implements MediaPlayer.OnInfoListener,
     private static int mGetCurrentPosition;
     public static int mGetDuration;
     public static String artistName, trackTitle, trackUrl;
+    SharedPreferences sharedPrefs;
+    boolean allowNotifications;
     ArrayList<Artist> mArtistTopTrackList = new ArrayList<>();
 
+
+    // Timer to prevent user request overload using Spotify API and retrofit
+    Handler timerHandler = new Handler();
+    Runnable runTrackRequest;
 
     public void setCurrentPosition(int CurrentPosition) {
         mGetCurrentPosition = CurrentPosition;
@@ -102,11 +110,15 @@ public class AudioService extends Service implements MediaPlayer.OnInfoListener,
                 new IntentFilter("previousTrack"));
         LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiverShowTrackPlayerActivity,
                 new IntentFilter("showTrackplayer"));
+
         // We only want to call one instance to prevent duplicate activities which causes a mess!
         mediaPlayer = new MediaPlayer();
         initMediaPlayer();
         api = new SpotifyApi();
         spotify = api.getService();
+
+        // Obtain SharedPref
+        sharedPrefs = getApplication().getSharedPreferences("AppDataPref", Context.MODE_PRIVATE);
 
         //create the service
         super.onCreate();
@@ -153,7 +165,6 @@ public class AudioService extends Service implements MediaPlayer.OnInfoListener,
         mediaPlayer.setOnPreparedListener(this);
         mediaPlayer.setOnCompletionListener(this);
         mediaPlayer.setOnErrorListener(this);
-
     }
 
     @Override
@@ -235,10 +246,6 @@ public class AudioService extends Service implements MediaPlayer.OnInfoListener,
 
     }
 
-//    public boolean isPlaying() {
-//        return mediaPlayer.isPlaying();
-//    }
-
     public void play(String urlData) {
 
         Log.v(TAG, "starting mediaPlayer");
@@ -263,12 +270,15 @@ public class AudioService extends Service implements MediaPlayer.OnInfoListener,
         if (trackPosition < mArtistTopTrackList.size() && trackPosition > -1) {
 
             Log.v(TAG, "Play track # " + trackPosition);
+            allowNotifications = sharedPrefs.getBoolean("allowNotifications", true);
             Artist artistTrackId = mArtistTopTrackList.get(trackPosition);
             String selectedTrackId = artistTrackId.getTrackId();
             String albumArt = mArtistTopTrackList.get(trackPosition).getAlbum_art();
             final String artistName = mArtistTopTrackList.get(trackPosition).getName();
             final String trackTitle = mArtistTopTrackList.get(trackPosition).getTrackTitle();
-            new MediaNotification(getApplication(), artistName, trackTitle, albumArt);
+            if (allowNotifications) {
+                new MediaNotification(getApplication(), artistName, trackTitle, albumArt);
+            }
 
             spotify.getTrack(selectedTrackId, new Callback<Track>() {
                 @Override
@@ -280,7 +290,6 @@ public class AudioService extends Service implements MediaPlayer.OnInfoListener,
                     AudioService.artistName = artistName;
                     AudioService.trackTitle = trackTitle;
                     AudioService.trackUrl = trackUrl;
-                    TrackPlayer.refreshShare();
                     if (seekTo > 0) {
                         lastKnownResumePosition = seekTo;
                         play(trackUrl);
@@ -309,12 +318,21 @@ public class AudioService extends Service implements MediaPlayer.OnInfoListener,
     private BroadcastReceiver mBroadcastReceiverPlayTrack = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            timerHandler.removeCallbacks(runTrackRequest);
             // Extract data included in the Intent
             mArtistTopTrackList = intent.getParcelableArrayListExtra("topTrackList");
-            int trackNumber = intent.getIntExtra("trackNumber", 0);
+            final int trackNumber = intent.getIntExtra("trackNumber", 0);
             isUserSelected = intent.getBooleanExtra("userSelected", true);
 //            String message = intent.getStringExtra("url");
-            playTrack(trackNumber, false, 1);
+            runTrackRequest = new Runnable() {
+                @Override
+                public void run() {
+                    Log.d("Timer", "Request Play track");
+                    playTrack(trackNumber, false, 1);
+                }
+            };
+            timerHandler.postDelayed(runTrackRequest, 500);
+
             Log.d("receiver", "Got message: prepairing to play track number #" + trackNumber);
         }
     };
@@ -349,21 +367,38 @@ public class AudioService extends Service implements MediaPlayer.OnInfoListener,
     private BroadcastReceiver mBroadcastReceiverNextTrackActivity = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            timerHandler.removeCallbacks(runTrackRequest);
             isUserSelected = true;
             stop(intent.getBooleanExtra("isNewArtistSelection", false));
-            int playTrack = (trackPosition) + 1;
-            playTrack(playTrack, false, 0);
+            final int playTrack = (trackPosition) + 1;
             Log.d("receiver", "Got message: Play Next track");
+            runTrackRequest = new Runnable() {
+                @Override
+                public void run() {
+                    Log.d("Timer", "Request Next track");
+                    playTrack(playTrack, false, 0);
+                }
+            };
+            timerHandler.postDelayed(runTrackRequest, 500);
         }
     };
 
     private BroadcastReceiver mBroadcastReceiverPreviousTrackActivity = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            timerHandler.removeCallbacks(runTrackRequest);
             isUserSelected = true;
-            int playTrack = (trackPosition) - 1;
-            playTrack(playTrack, false, 0);
+            final int playTrack = (trackPosition) - 1;
             Log.d("receiver", "Got message: Play Previous track");
+            runTrackRequest = new Runnable() {
+                @Override
+                public void run() {
+                    Log.d("Timer", "Request Previous track");
+                    playTrack(playTrack, false, 0);
+                }
+            };
+            timerHandler.postDelayed(runTrackRequest, 500);
+
         }
     };
 

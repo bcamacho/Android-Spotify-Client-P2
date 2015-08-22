@@ -12,7 +12,9 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ToggleButton;
 
 import com.brandycamacho.Spotify_Streamer.R;
 
@@ -22,7 +24,11 @@ public class DialogSettingsFragment extends DialogFragment {
 
     String TAG = this.toString();
     EditText et_country_code;
-    Button btn_submit, btn_default_country_code;
+    Button btn_submit, btn_default_country_code, btn_cancel;
+    ToggleButton tb_notifications;
+    boolean allowNotifications, test;
+    SharedPreferences sp;
+    SharedPreferences.Editor editor;
 
     public static DialogSettingsFragment newInstance() {
         DialogSettingsFragment d = new DialogSettingsFragment();
@@ -42,17 +48,41 @@ public class DialogSettingsFragment extends DialogFragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.dialog_settings, container, false);
 
-        final SharedPreferences sp = getActivity().getSharedPreferences("AppDataPref", Context.MODE_PRIVATE);
+        sp = getActivity().getSharedPreferences("AppDataPref", Context.MODE_PRIVATE);
+        editor = sp.edit();
         String countryCode = sp.getString("countryCode", getResources().getConfiguration().locale.getCountry());
+        allowNotifications = sp.getBoolean("allowNotifications", true);
+        Log.v(TAG, "---------->  " + allowNotifications + " <----------");
         et_country_code = (EditText) v.findViewById(R.id.et_country_code);
         et_country_code.setText(countryCode);
+        tb_notifications = (ToggleButton) v.findViewById(R.id.tb_notifications);
+        tb_notifications.setChecked(allowNotifications);
+        tb_notifications.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    allowNotifications = true;
+                } else {
+                    allowNotifications = false;
+                }
+                editor.putBoolean("allowNotifications", allowNotifications);
+                editor.apply();
+                Log.v(TAG, "Show notifications are " + allowNotifications);
+            }
+        });
+        btn_cancel = (Button) v.findViewById(R.id.btn_cancel);
+        btn_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getDialog().dismiss();
+            }
+        });
         btn_submit = (Button) v.findViewById(R.id.btn_submit);
         btn_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences.Editor editor = sp.edit();
                 editor.putString("countryCode", et_country_code.getText().toString());
-                editor.commit();
+                editor.apply();
                 getDialog().dismiss();
             }
         });
@@ -67,9 +97,9 @@ public class DialogSettingsFragment extends DialogFragment {
 
         // Verify saveInstanceState is null otherwise we are returing to activity and must use saveInstanceState to return data to end user
         if (savedInstanceState == null) {
-            Log.e(TAG, "No data within saveInstanceState");
+            Log.v(TAG, "No data within saveInstanceState");
         } else {
-            Log.e(TAG, "Theres data!!! - " + savedInstanceState.getBoolean("hasStarted"));
+            Log.v(TAG, "Theres data!!! - " + savedInstanceState.getBoolean("hasStarted"));
         }
         // Verify saveInstanceState is null otherwise we are returing to activity and must use saveInstanceState to return data to end user
         Log.e(TAG, "GET INTENT EXTRAS");
@@ -87,11 +117,9 @@ public class DialogSettingsFragment extends DialogFragment {
     @Override
     public void onDestroyView() {
         Dialog dialog = getDialog();
-
         // Work around bug: http://code.google.com/p/android/issues/detail?id=17423
         if ((dialog != null) && getRetainInstance())
             dialog.setDismissMessage(null);
-
         super.onDestroyView();
     }
 
@@ -104,7 +132,7 @@ public class DialogSettingsFragment extends DialogFragment {
 
     @Override
     public void onDestroy() {
-        Log.e(TAG, "Has been destroyed");
+        Log.v(TAG, "Has been destroyed");
         super.onDestroy();
     }
 

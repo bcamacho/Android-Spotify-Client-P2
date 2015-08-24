@@ -104,7 +104,6 @@ public class DialogTrackPlayerFragment extends DialogFragment implements View.On
     Runnable runUpdateBackgroundImage = new Runnable() {
         @Override
         public void run() {
-            Log.v(TAG, "TIMER - runTrackUpdate");
             if (!cancelHack) {
                 updateTrackCount++;
                 updateBackgroundImage();
@@ -119,7 +118,6 @@ public class DialogTrackPlayerFragment extends DialogFragment implements View.On
     Runnable runPlayStatusCheck = new Runnable() {
         @Override
         public void run() {
-                Log.v(TAG, "TIMER - runPlayStatusCheck");
                 mDuration = AudioService.getDuration();
                 seekbar.setMax(mDuration);
                 mTimeLeft = AudioService.getGetCurrentPosition();
@@ -154,7 +152,6 @@ public class DialogTrackPlayerFragment extends DialogFragment implements View.On
     Runnable runAutoPlay = new Runnable() {
         @Override
         public void run() {
-            Log.v(TAG, "TIMER - runAutoPlay");
             Intent i = new Intent("trackPlayerPlayTrack");
             LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(i);
             startProgressDialog();
@@ -164,7 +161,6 @@ public class DialogTrackPlayerFragment extends DialogFragment implements View.On
     Runnable runAutoSetUserSelected = new Runnable() {
         @Override
         public void run() {
-            Log.v(TAG, "TIMER - RunUserSelected");
             AudioService.isUserSelected = false;
             timerHandler.postDelayed(runAutoSetUserSelected, defaultTimerDelay);
         }

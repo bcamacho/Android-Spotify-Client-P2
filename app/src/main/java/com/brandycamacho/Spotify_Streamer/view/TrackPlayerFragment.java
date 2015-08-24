@@ -57,7 +57,6 @@ public class TrackPlayerFragment extends Fragment implements View.OnClickListene
     Runnable runUpdateBackgroundImage = new Runnable() {
         @Override
         public void run() {
-            Log.v(TAG, "TIMER - RunTrackUpdate");
             if (!cancelHack) {
                 updateTrackCount++;
                 updateBackgroundImage();
@@ -98,7 +97,6 @@ public class TrackPlayerFragment extends Fragment implements View.OnClickListene
                 tv_track_duration.setText("Track Duration " + String.valueOf(formater.format(mDuration)));
             }
             seekbar.setProgress(AudioService.getGetCurrentPosition());
-            Log.v(TAG, "TIMER - RunPlayStatus");
             // repeat
             timerHandler.postDelayed(runPlayStatusCheck, 350);
         }
@@ -110,7 +108,6 @@ public class TrackPlayerFragment extends Fragment implements View.OnClickListene
             Intent i = new Intent("trackPlayerPlayTrack");
             LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(i);
             startProgressDialog();
-            Log.v(TAG, "TIMER - AutoPlay");
 
         }
     };
@@ -119,7 +116,6 @@ public class TrackPlayerFragment extends Fragment implements View.OnClickListene
         @Override
         public void run() {
             AudioService.isUserSelected = false;
-            Log.v(TAG, "TIMER - runUserAutoSelected");
             timerHandler.postDelayed(runAutoSetUserSelected, defaultTimerDelay);
         }
     };

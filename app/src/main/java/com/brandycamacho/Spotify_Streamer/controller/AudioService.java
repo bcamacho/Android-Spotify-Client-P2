@@ -112,6 +112,8 @@ public class AudioService extends Service implements MediaPlayer.OnInfoListener,
                 new IntentFilter("showTrackplayer"));
         LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiverShowTrackPlayerDialog,
                 new IntentFilter("showTrackplayerDialog"));
+        LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiverUpdateTrackInfo,
+                new IntentFilter("updateTrackInfo"));
 
         // We only want to call one instance to prevent duplicate activities which causes a mess!
         mediaPlayer = new MediaPlayer();
@@ -267,6 +269,14 @@ public class AudioService extends Service implements MediaPlayer.OnInfoListener,
 
     }
 
+    private void updateTrackInfo(){
+        albumArt = mArtistTopTrackList.get(trackPosition).getAlbum_art();
+        String artistName = mArtistTopTrackList.get(trackPosition).getName();
+        String trackTitle = mArtistTopTrackList.get(trackPosition).getTrackTitle();
+        AudioService.artistName = artistName;
+        AudioService.trackTitle = trackTitle;
+    }
+
     private void playTrack(final int trackNumber, Boolean isAuto, final int seekTo) {
         trackPosition = trackNumber;
         if (isAuto) {
@@ -274,11 +284,11 @@ public class AudioService extends Service implements MediaPlayer.OnInfoListener,
         }
         if (trackPosition < mArtistTopTrackList.size() && trackPosition > -1) {
 
+            updateTrackInfo();
             Log.v(TAG, "Play track # " + trackPosition);
             allowNotifications = sharedPrefs.getBoolean("allowNotifications", true);
             Artist artistTrackId = mArtistTopTrackList.get(trackPosition);
             String selectedTrackId = artistTrackId.getTrackId();
-            albumArt = mArtistTopTrackList.get(trackPosition).getAlbum_art();
             final String artistName = mArtistTopTrackList.get(trackPosition).getName();
             final String trackTitle = mArtistTopTrackList.get(trackPosition).getTrackTitle();
             // checking notification settings
@@ -446,6 +456,15 @@ public class AudioService extends Service implements MediaPlayer.OnInfoListener,
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
             Log.d("receiver", "Got message: Display Now Playing Track Player");
+        }
+    };
+
+    private BroadcastReceiver mBroadcastReceiverUpdateTrackInfo = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Creating new intent activity to display results within new window
+            updateTrackInfo();
+            Log.d("receiver", "Got message: Updating Track Info");
         }
     };
 

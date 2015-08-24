@@ -2,6 +2,7 @@ package com.brandycamacho.Spotify_Streamer.view;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -35,15 +36,30 @@ public class TrackPlayer extends FragmentActivity {
         mShareActionProvider = (ShareActionProvider) menu.findItem(R.id.action_share).getActionProvider();
         // Fetch and store ShareActionProvider
         mShareActionProvider.setShareIntent(getDefaultShareIntent());
+        timerHandler.postDelayed(runMenuUpdate, 1000);
         return super.onCreateOptionsMenu(menu);
     }
 
+    boolean cancelHack = false;
+    Handler timerHandler = new Handler();
+    Runnable runMenuUpdate = new Runnable() {
+        @Override
+        public void run() {
+            if (!cancelHack) {
+                invalidateOptionsMenu();
+                    timerHandler.postDelayed(runMenuUpdate, 1500);
+            }
+        }
+    };
 
-    private static Intent getDefaultShareIntent() {
+
+    private Intent getDefaultShareIntent() {
+
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
         intent.putExtra(Intent.EXTRA_SUBJECT, "Check out this song \n");
         intent.putExtra(Intent.EXTRA_TEXT, "Group = " + AudioService.artistName + "\nTitle = " + AudioService.trackTitle + "\nPreview = " + AudioService.trackUrl);
+        Log.v("Share_INTENT", "Data = " + AudioService.artistName + " " + AudioService.trackTitle);
         return intent;
     }
 
@@ -71,5 +87,11 @@ public class TrackPlayer extends FragmentActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        timerHandler.removeCallbacks(runMenuUpdate);
     }
 }

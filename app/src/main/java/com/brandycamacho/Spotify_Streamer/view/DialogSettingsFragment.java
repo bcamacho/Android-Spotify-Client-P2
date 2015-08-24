@@ -17,6 +17,8 @@ import android.widget.EditText;
 import android.widget.ToggleButton;
 
 import com.brandycamacho.Spotify_Streamer.R;
+import com.brandycamacho.Spotify_Streamer.controller.AudioService;
+import com.brandycamacho.Spotify_Streamer.controller.MediaNotification;
 
 
 public class DialogSettingsFragment extends DialogFragment {
@@ -60,10 +62,15 @@ public class DialogSettingsFragment extends DialogFragment {
         tb_notifications.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
                 if (isChecked) {
                     allowNotifications = true;
+                    if (AudioService.albumArt != null)
+                    new MediaNotification(getActivity(), AudioService.artistName, AudioService.trackTitle, AudioService.albumArt);
                 } else {
                     allowNotifications = false;
+                    MediaNotification.cancel(getActivity());
+
                 }
                 editor.putBoolean("allowNotifications", allowNotifications);
                 editor.apply();

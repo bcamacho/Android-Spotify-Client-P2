@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.brandycamacho.Spotify_Streamer.R;
 import com.brandycamacho.Spotify_Streamer.controller.ArtistNameAdapter;
@@ -48,7 +49,7 @@ public class ArtistResultsFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         Log.v(TAG, "Save Instance State to Bundle");
         // save instance state to bundle
-        if (mPosition != AdapterView.INVALID_POSITION){
+        if (mPosition != AdapterView.INVALID_POSITION) {
             outState.putInt(LIST_INSTANCE_STATE, mPosition);
         }
         super.onSaveInstanceState(outState);
@@ -58,7 +59,7 @@ public class ArtistResultsFragment extends Fragment {
     public void onResume() {
         Log.v(TAG, "On resume");
         // if bundle contains key for stored position then set to method varible mPosition
-        if (mPosition != -1){
+        if (mPosition != -1) {
             lv_results_artist.setSelection(mPosition);
         }
         super.onResume();
@@ -83,81 +84,87 @@ public class ArtistResultsFragment extends Fragment {
         v = inflater.inflate(R.layout.fragment_activity_results_artist, container, false);
 
         /** Wrapping adapter with nHaarman animationAdapter Library
-        retrieved from: http://nhaarman.github.io/ListViewAnimations/#appearance-animations
+         retrieved from: http://nhaarman.github.io/ListViewAnimations/#appearance-animations
          This allowed me to experiment with annimations for list view items*/
 
         mArtistAdapter = new ArtistNameAdapter<>(getActivity(), R.layout.list_view_artist, mArtistList);
         // If mArtistAdapter is empty prompt user to use EditText to search for artist and display results.
-        if (mArtistAdapter.isEmpty()){
+        if (mArtistAdapter.isEmpty()) {
             // populating a single item with ID null to prevent onClick method from implementing
-            mArtistAdapter.add(new Artist("Type artist name above to start search",null,null));
+            mArtistAdapter.add(new Artist("Type artist name above to start search", null, null));
         }
         lv_results_artist = (ListView) v.findViewById(R.id.lv_results_artist);
         SwingRightInAnimationAdapter animAdapter = new SwingRightInAnimationAdapter(mArtistAdapter);
         animAdapter.setAbsListView(lv_results_artist);
         lv_results_artist.setAdapter(animAdapter);
         lv_results_artist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-             @Override
-             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
 
-                 // check to determine if we need to kick off a new intent for portrait mode
-                 TopTenActivityFragment frag = (TopTenActivityFragment)getActivity().getFragmentManager().findFragmentById(R.id.topTen);
-                 // If stream is playing we need to stop it otherwise we will get caught up waiting for the track to complete. Worse, if the user pauses the track and attempts to load new artist they will wait forever :(
-                 Intent stopTrack = new Intent("stopTrack");
-                 stopTrack.putExtra("isNewArtistSelection", true);
-                 LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(stopTrack);
-                 if (frag != null && frag.isVisible()) {
+                if (mArtistAdapter.getItem((int) id).getName().equals("Type artist name above to start search")) {
+                    Toast.makeText(getActivity(), "Use search box, type an artist name to search", Toast.LENGTH_SHORT).show();
+                } else if (mArtistAdapter.getItem((int) id).getName().equals("ERROR -> Check internet connection")) {
+                    Toast.makeText(getActivity(), "Please verify internet connectivity and country code within settings", Toast.LENGTH_SHORT).show();
+                } else {
+                    // check to determine if we need to kick off a new intent for portrait mode
+                    TopTenActivityFragment frag = (TopTenActivityFragment) getActivity().getFragmentManager().findFragmentById(R.id.topTen);
+                    // If stream is playing we need to stop it otherwise we will get caught up waiting for the track to complete. Worse, if the user pauses the track and attempts to load new artist they will wait forever :(
+                    Intent stopTrack = new Intent("stopTrack");
+                    stopTrack.putExtra("isNewArtistSelection", true);
+                    LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(stopTrack);
+                    if (frag != null && frag.isVisible()) {
 
-                         // Use bundle to pass data to calling fragment
-                         Bundle mArtistBundle = new Bundle();
-                         mArtistBundle.putString("artistName", mArtistAdapter.getItem((int) id).getName());
-                         mArtistBundle.putString("artistId", mArtistAdapter.getItem((int) id).getId());
+                        // Use bundle to pass data to calling fragment
+                        Bundle mArtistBundle = new Bundle();
+                        mArtistBundle.putString("artistName", mArtistAdapter.getItem((int) id).getName());
+                        mArtistBundle.putString("artistId", mArtistAdapter.getItem((int) id).getId());
 
-                         Fragment fragTopTen = new ResultsTopTenFragment();
-                         Fragment fragTitle = new TitleFragment();
-                         //get fragment manager
-                         FragmentManager fm = getFragmentManager();
+                        Fragment fragTopTen = new ResultsTopTenFragment();
+                        Fragment fragTitle = new TitleFragment();
+                        //get fragment manager
+                        FragmentManager fm = getFragmentManager();
 
-                         // get fragment transition
-                         FragmentTransaction ft = fm.beginTransaction();
+                        // get fragment transition
+                        FragmentTransaction ft = fm.beginTransaction();
 
-                         // next we need to execute
-                         // get fragment class
-                         fragTopTen.setArguments(mArtistBundle);
-                         fragTitle.setArguments(mArtistBundle);
+                        // next we need to execute
+                        // get fragment class
+                        fragTopTen.setArguments(mArtistBundle);
+                        fragTitle.setArguments(mArtistBundle);
 
-                         ft.replace(R.id.topTenfragment, fragTopTen, "Detail");
-                         ft.replace(R.id.title_frame_layout, fragTitle, "Title");
-                         ft.commit();
+                        ft.replace(R.id.topTenfragment, fragTopTen, "Detail");
+                        ft.replace(R.id.title_frame_layout, fragTitle, "Title");
+                        ft.commit();
 
-                 } else {
-                     // Use bundle to pass data to calling fragment
-                     Bundle mArtistBundle = new Bundle();
-                     mArtistBundle.putString("artistName", mArtistAdapter.getItem((int) id).getName());
-                     mArtistBundle.putString("artistId", mArtistAdapter.getItem((int) id).getId());
+                    } else {
+                        // Use bundle to pass data to calling fragment
+                        Bundle mArtistBundle = new Bundle();
+                        mArtistBundle.putString("artistName", mArtistAdapter.getItem((int) id).getName());
+                        mArtistBundle.putString("artistId", mArtistAdapter.getItem((int) id).getId());
 
-                     // we need to populate fragment with visability set to gone to allow state change to landscape
-                     Fragment fragTopTen = new ResultsTopTenFragment();
-                     FragmentManager fm = getFragmentManager();
-                     FragmentTransaction ft = fm.beginTransaction();
-                     fragTopTen.setArguments(mArtistBundle);
-                     ft.replace(R.id.topTenfragment, fragTopTen, "Detail");
-                     ft.commit();
+                        // we need to populate fragment with visability set to gone to allow state change to landscape
+                        Fragment fragTopTen = new ResultsTopTenFragment();
+                        FragmentManager fm = getFragmentManager();
+                        FragmentTransaction ft = fm.beginTransaction();
+                        fragTopTen.setArguments(mArtistBundle);
+                        ft.replace(R.id.topTenfragment, fragTopTen, "Detail");
+                        ft.commit();
 
-                     // Creating new intent activity to display results within new window
-                     Intent i = new Intent();
-                     i.setClass(getActivity(), TopTenActivity.class);
-                     i.putExtras(mArtistBundle);
-                     startActivity(i);
-                 }
-                 //storing position of item clicked
-                 mPosition = position;
-             }
-         });
+                        // Creating new intent activity to display results within new window
+                        Intent i = new Intent();
+                        i.setClass(getActivity(), TopTenActivity.class);
+                        i.putExtras(mArtistBundle);
+                        startActivity(i);
+                    }
+                    //storing position of item clicked
+                    mPosition = position;
+                }
+            }
+        });
 
         // if bundle contains key for stored position then set to method varible mPosition
-        if (savedInstanceState != null && savedInstanceState.containsKey(LIST_INSTANCE_STATE)){
+        if (savedInstanceState != null && savedInstanceState.containsKey(LIST_INSTANCE_STATE)) {
             mPosition = savedInstanceState.getInt(LIST_INSTANCE_STATE);
         }
 
@@ -175,12 +182,11 @@ public class ArtistResultsFragment extends Fragment {
         updateUi.post(new Runnable() {
             @Override
             public void run() {
-            mArtistAdapter.notifyDataSetChanged();
+                mArtistAdapter.notifyDataSetChanged();
 
             }
         });
     }
-
 
 
 }

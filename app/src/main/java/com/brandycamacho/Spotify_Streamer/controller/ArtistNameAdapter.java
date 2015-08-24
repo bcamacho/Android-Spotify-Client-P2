@@ -48,7 +48,7 @@ public class ArtistNameAdapter<A> extends ArrayAdapter<Artist> {
         }
 
 		/*
-		 * Recall that the variable position is sent in as an argument to this method.
+         * Recall that the variable position is sent in as an argument to this method.
 		 * The variable simply refers to the position of the current object in the list. (The ArrayAdapter
 		 * iterates through the list we sent it)
 		 *

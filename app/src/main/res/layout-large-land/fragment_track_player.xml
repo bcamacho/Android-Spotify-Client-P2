@@ -13,11 +13,42 @@
         android:layout_height="match_parent">
 
         <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:background="#333333"
+            android:id="@+id/ll_fake_action_bar" >
+
+            <ImageButton
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_share"
+                android:src="@android:drawable/ic_menu_share" />
+
+            <Button
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Stop Track"
+                android:id="@+id/btn_stop" />
+
+            <ImageButton
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_settings"
+                android:src="@android:drawable/ic_menu_preferences" />
+        </LinearLayout>
+
+        <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:weightSum="1"
-            android:layout_weight=".3">
+            android:layout_weight=".3"
+            android:id="@+id/ll_album_info">
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -34,8 +65,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="fill_parent"
                         android:id="@+id/iv_album_art"
-                        android:layout_gravity="center_horizontal"
-                        android:background="#82c3aa" />
+                        android:layout_gravity="center_horizontal" />
                 </LinearLayout>
 
                 <FrameLayout
@@ -45,10 +75,13 @@
 
                     <LinearLayout
                         android:orientation="vertical"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:id="@+id/linearLayout" >
+                        android:id="@+id/linearLayout"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:background="@android:color/darker_gray">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -70,14 +103,16 @@
                             android:layout_height="wrap_content"
                             android:text="Album Title"
                             android:id="@+id/tv_album_title"
-                            android:layout_gravity="center_horizontal" />
+                            android:layout_gravity="center_horizontal"
+                            android:textStyle="bold" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/tv_track_duration"
                             android:text="Track Duration"
-                            android:textSize="@dimen/title" />
+                            android:textSize="@dimen/title"
+                            android:layout_gravity="center_horizontal" />
 
                         <TextView
                             android:layout_width="wrap_content"

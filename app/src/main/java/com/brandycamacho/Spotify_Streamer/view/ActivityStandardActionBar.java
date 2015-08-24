@@ -1,6 +1,7 @@
 package com.brandycamacho.Spotify_Streamer.view;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
@@ -14,7 +15,7 @@ import com.brandycamacho.Spotify_Streamer.controller.AudioService;
 /**
  * Created by brandycamacho on 8/21/15.
  */
-public class ActivityStandardActionBar extends FragmentActivity{
+public class ActivityStandardActionBar extends FragmentActivity {
 
     Menu actionBarMenu;
 
@@ -28,6 +29,7 @@ public class ActivityStandardActionBar extends FragmentActivity{
             timerHandler.postDelayed(runAutoMenuUpdate, 1000);
         }
     };
+    int screenSize;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -43,6 +45,9 @@ public class ActivityStandardActionBar extends FragmentActivity{
             timerHandler.postDelayed(runAutoMenuUpdate, 50);
             isStarted = true;
         }
+        screenSize = getResources().getConfiguration().screenLayout &
+                Configuration.SCREENLAYOUT_SIZE_MASK;
+
         return true;
     }
 
@@ -52,18 +57,23 @@ public class ActivityStandardActionBar extends FragmentActivity{
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        switch (id){
+        switch (id) {
             case 0:
                 Log.v("ACTIONBAR_MENU", "Settings was selected");
                 DialogSettingsFragment d = DialogSettingsFragment.newInstance();
-                d.show(getFragmentManager() , "dialog");
+                d.show(getFragmentManager(), "dialog");
                 d.setCancelable(false);
                 d.setRetainInstance(true);
                 break;
             case 1:
                 Log.v("ACTIONBAR_MENU", "Now Playing was selected");
-                Intent i = new Intent("showTrackplayer");
-                LocalBroadcastManager.getInstance(this).sendBroadcast(i);
+                if (screenSize == Configuration.SCREENLAYOUT_SIZE_LARGE || screenSize == Configuration.SCREENLAYOUT_SIZE_XLARGE) {
+                    Intent i = new Intent("showTrackplayerDialog");
+                    LocalBroadcastManager.getInstance(this).sendBroadcast(i);
+                } else {
+                    Intent i = new Intent("showTrackplayer");
+                    LocalBroadcastManager.getInstance(this).sendBroadcast(i);
+                }
                 break;
 
         }

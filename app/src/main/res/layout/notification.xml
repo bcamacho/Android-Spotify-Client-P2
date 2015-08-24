@@ -8,42 +8,6 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight=".5"
-            android:gravity="center">
-
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Artist Name"
-                android:id="@+id/tv_artist_name"
-                android:textColor="@android:color/primary_text_light"
-                android:gravity="center_horizontal"
-                android:paddingTop="10dp"
-                android:paddingBottom="5dp" />
-
-            <TextView
-                android:id="@+id/tv_track_title"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/btn_pause"
-                android:text="Track Title"
-                android:textColor="@android:color/primary_text_light"
-                android:gravity="center_horizontal" />
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_weight=".5">
 
@@ -51,30 +15,74 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/iv_album_art"
-            android:layout_weight=".10"
+            android:layout_weight=".5"
             android:layout_gravity="center"
             android:padding="10dp" />
 
-        <ImageView
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:id="@+id/btn_previous"
-            android:src="@android:drawable/ic_media_previous"
-            android:layout_weight=".20" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight=".5"
+            android:minHeight="150dp">
 
-        <ImageView
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:id="@+id/btn_pause"
-            android:src="@android:drawable/ic_media_pause"
-            android:layout_weight="0.20" />
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight=".5"
+                android:gravity="center">
 
-        <ImageView
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:id="@+id/btn_next"
-            android:src="@android:drawable/ic_media_next"
-            android:layout_weight="0.20" />
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="Artist Name"
+                    android:id="@+id/tv_artist_name"
+                    android:textColor="@android:color/primary_text_light"
+                    android:gravity="center_horizontal"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="5dp" />
+
+                <TextView
+                    android:id="@+id/tv_track_title"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/btn_pause"
+                    android:text="Track Title"
+                    android:textColor="@android:color/primary_text_light"
+                    android:gravity="center_horizontal" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight=".5">
+
+                <ImageView
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:id="@+id/btn_previous"
+                    android:src="@android:drawable/ic_media_previous"
+                    android:layout_weight=".20" />
+
+                <ImageView
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:id="@+id/btn_pause"
+                    android:src="@android:drawable/ic_media_pause"
+                    android:layout_weight="0.20" />
+
+                <ImageView
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:id="@+id/btn_next"
+                    android:src="@android:drawable/ic_media_next"
+                    android:layout_weight="0.20" />
+            </LinearLayout>
+        </LinearLayout>
 
     </LinearLayout>
 </LinearLayout>

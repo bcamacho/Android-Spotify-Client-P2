@@ -12,33 +12,76 @@
         android:layout_height="match_parent">
 
         <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:background="#333333"
+            android:id="@+id/ll_fake_action_bar"
+            android:visibility="gone">
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageButton2"
+                android:src="@android:drawable/ic_menu_share"
+                style="?android:attr/buttonBarButtonStyle" />
+
+            <Button
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Stop Track"
+                android:id="@+id/btn_stop" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageButton"
+                android:src="@android:drawable/ic_menu_preferences"
+                style="?android:attr/buttonBarButtonStyle" />
+        </LinearLayout>
+
+        <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:weightSum="1"
-            android:layout_weight=".2">
+            android:layout_weight=".2"
+            android:id="@+id/ll_album_info">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Artist Name"
-                android:id="@+id/tv_artist_name"
-                android:layout_gravity="center_horizontal" />
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:background="#3c3d38">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Album Title"
-                android:id="@+id/tv_album_title"
-                android:layout_gravity="center_horizontal" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="Artist Name"
+                    android:id="@+id/tv_artist_name"
+                    android:layout_gravity="center_horizontal"
+                    android:textSize="@dimen/list_view_detail_large_text" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Track Title"
-                android:id="@+id/tv_track_title"
-                android:layout_gravity="center_horizontal" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Album Title"
+                    android:id="@+id/tv_album_title"
+                    android:layout_gravity="center_horizontal" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Track Title"
+                    android:id="@+id/tv_track_title"
+                    android:layout_gravity="center_horizontal"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
             <LinearLayout
                 android:orientation="vertical"
@@ -56,8 +99,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="fill_parent"
                         android:id="@+id/iv_album_art"
-                        android:layout_gravity="center_horizontal"
-                        android:background="#82c3aa" />
+                        android:layout_gravity="center_horizontal" />
                 </LinearLayout>
 
                 <FrameLayout
@@ -98,7 +140,7 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight=".8">
+            android:layout_weight=".5">
 
             <SeekBar
                 style="?android:attr/progressBarStyleHorizontal"

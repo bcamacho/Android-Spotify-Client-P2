@@ -20,15 +20,10 @@ public class MediaNotification {
     private Notification notification;
     private NotificationCompat.Builder nBuilder;
     private RemoteViews remoteView;
-//    private String artistName = "";
-//    private String trackName = "";
-//    private String albumArt = "";
+
 
     public MediaNotification(Context ctx, String artistName, String trackName, String albumArt) {
         this.parent = ctx;
-//        this.artistName = artistName;
-//        this.trackName = trackName;
-//        this.albumArt = albumArt;
 
         remoteView = new RemoteViews(parent.getPackageName(), R.layout.notification);
         remoteView.setImageViewResource(R.id.iv_album_art, 999);
@@ -40,6 +35,7 @@ public class MediaNotification {
                 .setContentText("Playing track")
                 .setSmallIcon(R.drawable.icon)
                 .setOngoing(false);
+
         //set the button listeners
         setListeners(remoteView);
         nBuilder.setContent(remoteView);
@@ -74,5 +70,11 @@ public class MediaNotification {
         PendingIntent pend_previous = PendingIntent.getActivity(parent, 2, previous, 0);
         view.setOnClickPendingIntent(R.id.btn_previous, pend_previous);
 
+    }
+
+    public static void cancel(Context ctx) {
+        Context parent = ctx;
+        NotificationManager nManager = (NotificationManager) parent.getSystemService(Context.NOTIFICATION_SERVICE);
+        nManager.cancelAll();
     }
 }

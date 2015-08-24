@@ -48,7 +48,7 @@ public class AudioService extends Service implements MediaPlayer.OnInfoListener,
     public static Boolean isUserSelected;
     private static int mGetCurrentPosition;
     public static int mGetDuration;
-    public static String artistName, trackTitle, trackUrl;
+    public static String artistName, trackTitle, trackUrl, albumArt;
     SharedPreferences sharedPrefs;
     boolean allowNotifications;
     ArrayList<Artist> mArtistTopTrackList = new ArrayList<>();
@@ -110,6 +110,8 @@ public class AudioService extends Service implements MediaPlayer.OnInfoListener,
                 new IntentFilter("previousTrack"));
         LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiverShowTrackPlayerActivity,
                 new IntentFilter("showTrackplayer"));
+        LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiverShowTrackPlayerDialog,
+                new IntentFilter("showTrackplayerDialog"));
 
         // We only want to call one instance to prevent duplicate activities which causes a mess!
         mediaPlayer = new MediaPlayer();
@@ -196,6 +198,8 @@ public class AudioService extends Service implements MediaPlayer.OnInfoListener,
         mediaPlayer.stop();
         mediaPlayer.reset();
         mMediaState = serviceState.STOPPED;
+        isPlaying = false;
+        MediaNotification.cancel(getApplication());
     }
 
     private void pause() {
@@ -256,6 +260,7 @@ public class AudioService extends Service implements MediaPlayer.OnInfoListener,
             // media player start
             mMediaState = serviceState.PREPARE;
             mediaPlayer.prepareAsync();
+            isPlaying = true;
         } catch (Exception e) {
             Log.v(TAG, String.valueOf(e));
         }
@@ -273,13 +278,15 @@ public class AudioService extends Service implements MediaPlayer.OnInfoListener,
             allowNotifications = sharedPrefs.getBoolean("allowNotifications", true);
             Artist artistTrackId = mArtistTopTrackList.get(trackPosition);
             String selectedTrackId = artistTrackId.getTrackId();
-            String albumArt = mArtistTopTrackList.get(trackPosition).getAlbum_art();
+            albumArt = mArtistTopTrackList.get(trackPosition).getAlbum_art();
             final String artistName = mArtistTopTrackList.get(trackPosition).getName();
             final String trackTitle = mArtistTopTrackList.get(trackPosition).getTrackTitle();
+            // checking notification settings
             if (allowNotifications) {
                 new MediaNotification(getApplication(), artistName, trackTitle, albumArt);
+            } else {
+                MediaNotification.cancel(getApplication());
             }
-
             spotify.getTrack(selectedTrackId, new Callback<Track>() {
                 @Override
                 public void success(Track track, Response response) {
@@ -402,12 +409,34 @@ public class AudioService extends Service implements MediaPlayer.OnInfoListener,
         }
     };
 
+    private BroadcastReceiver mBroadcastReceiverShowTrackPlayerDialog = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Creating new intent activity to display results within new window
+            Bundle mArtistBundle = new Bundle();
+            mArtistBundle.putInt("position", trackPosition);
+            mArtistBundle.putBoolean("autoPlay", false);
+            mArtistBundle.putBoolean("hideMenu", true);
+            // send list of songs
+            mArtistBundle.putParcelableArrayList("topTrackList", mArtistTopTrackList);
+            Intent i = new Intent();
+            i.setClass(context, TrackPlayer.class);
+            i.putExtras(mArtistBundle);
+            i.putExtra("autoPlay", false);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(i);
+            Log.d("receiver", "Got message: Display Now Playing Track Player");
+        }
+    };
+
     private BroadcastReceiver mBroadcastReceiverShowTrackPlayerActivity = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             // Creating new intent activity to display results within new window
             Bundle mArtistBundle = new Bundle();
             mArtistBundle.putInt("position", trackPosition);
+            mArtistBundle.putBoolean("autoPlay", false);
+            mArtistBundle.putBoolean("hideMenu", false);
             // send list of songs
             mArtistBundle.putParcelableArrayList("topTrackList", mArtistTopTrackList);
             Intent i = new Intent();
@@ -432,4 +461,11 @@ public class AudioService extends Service implements MediaPlayer.OnInfoListener,
         }
     }
 
+    // Suggested during code review, great solution!
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        super.onTaskRemoved(rootIntent);
+        MediaNotification.cancel(getApplication());
+        stopSelf();
+    }
 }

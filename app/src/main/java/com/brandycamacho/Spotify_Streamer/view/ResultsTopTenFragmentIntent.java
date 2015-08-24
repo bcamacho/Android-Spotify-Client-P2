@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.brandycamacho.Spotify_Streamer.R;
 import com.brandycamacho.Spotify_Streamer.controller.ArtistTopTracksAdapter;
@@ -99,26 +100,32 @@ public class ResultsTopTenFragmentIntent extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                // We will use Spotify ID to implement a details fragment activity that will provide details along with ability to listen to song.
-                Bundle mArtistBundle = new Bundle();
-                // send selected song
-                mArtistBundle.putString("artistName", artistName);
-                mArtistBundle.putString("trackId", mArtistTopTenAdapter.getItem((int) id).getTrackId());
-                mArtistBundle.putString("trackName", mArtistTopTenAdapter.getItem((int) id).getTrackTitle());
-                mArtistBundle.putString("albumName", mArtistTopTenAdapter.getItem((int) id).getAlbum());
-                mArtistBundle.putString("albumArt", mArtistTopTenAdapter.getItem((int) id).getAlbum_art());
-                mArtistBundle.putInt("position", position);
-                // send list of songs
-                mArtistBundle.putParcelableArrayList("topTrackList", mArtistTopTrackList);
-                // If stream is playing we need to stop it otherwise we will get caught up waiting for the track to complete. Worse, if the user pauses the track and attempts to load new artist they will wait forever :(
-                Intent stopTrack = new Intent("stopTrack");
-                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(stopTrack);
-                // Creating new intent activity to display results within new window
-                Intent i = new Intent();
-                i.setClass(getActivity(), TrackPlayer.class);
-                i.putExtra("autoPlay", true);
-                i.putExtras(mArtistBundle);
-                startActivity(i);
+
+                if (mArtistTopTenAdapter.getItem((int) id).getTrackTitle().equals("ERROR")) {
+                    Toast.makeText(getActivity(), "Please verify internet connectivity and country code within settings", Toast.LENGTH_SHORT).show();
+                } else {
+                    // We will use Spotify ID to implement a details fragment activity that will provide details along with ability to listen to song.
+                    Bundle mArtistBundle = new Bundle();
+                    // send selected song
+                    mArtistBundle.putString("artistName", artistName);
+                    mArtistBundle.putString("trackId", mArtistTopTenAdapter.getItem((int) id).getTrackId());
+                    mArtistBundle.putString("trackName", mArtistTopTenAdapter.getItem((int) id).getTrackTitle());
+                    mArtistBundle.putString("albumName", mArtistTopTenAdapter.getItem((int) id).getAlbum());
+                    mArtistBundle.putString("albumArt", mArtistTopTenAdapter.getItem((int) id).getAlbum_art());
+                    mArtistBundle.putBoolean("autoPlay", true);
+                    mArtistBundle.putInt("position", position);
+                    // send list of songs
+                    mArtistBundle.putParcelableArrayList("topTrackList", mArtistTopTrackList);
+                    // If stream is playing we need to stop it otherwise we will get caught up waiting for the track to complete. Worse, if the user pauses the track and attempts to load new artist they will wait forever :(
+                    Intent stopTrack = new Intent("stopTrack");
+                    LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(stopTrack);
+                    // Creating new intent activity to display results within new window
+                    Intent i = new Intent();
+                    i.setClass(getActivity(), TrackPlayer.class);
+                    i.putExtra("autoPlay", true);
+                    i.putExtras(mArtistBundle);
+                    startActivity(i);
+                }
             }
         });
 

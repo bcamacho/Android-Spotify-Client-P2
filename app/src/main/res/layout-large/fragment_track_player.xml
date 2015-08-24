@@ -4,8 +4,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.brandycamacho.Spotify_Streamer.view.TrackPlayerFragment"
-    tools:showIn="@layout/activity_track_player">
+    tools:context="com.brandycamacho.Spotify_Streamer.view.TrackPlayerFragment">
 
     <LinearLayout
         android:orientation="vertical"
@@ -18,14 +17,14 @@
             android:layout_height="wrap_content"
             android:gravity="end"
             android:background="#333333"
-            android:id="@+id/ll_fake_action_bar" >
+            android:id="@+id/ll_fake_action_bar">
 
             <ImageButton
-                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/btn_share"
-                android:src="@android:drawable/ic_menu_share" />
+                android:id="@+id/imageButton2"
+                android:src="@android:drawable/ic_menu_share"
+                style="?android:attr/buttonBarButtonStyle" />
 
             <Button
                 style="?android:attr/buttonBarButtonStyle"
@@ -35,11 +34,11 @@
                 android:id="@+id/btn_stop" />
 
             <ImageButton
-                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/btn_settings"
-                android:src="@android:drawable/ic_menu_preferences" />
+                android:id="@+id/imageButton"
+                android:src="@android:drawable/ic_menu_preferences"
+                style="?android:attr/buttonBarButtonStyle" />
         </LinearLayout>
 
         <LinearLayout
@@ -54,9 +53,9 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#3c3d38"
                 android:paddingTop="10dp"
-                android:paddingBottom="10dp">
+                android:paddingBottom="10dp"
+                android:background="#3c3d38">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -65,15 +64,14 @@
                     android:text="Artist Name"
                     android:id="@+id/tv_artist_name"
                     android:layout_gravity="center_horizontal"
-                    android:textSize="@dimen/headline" />
+                    android:textSize="@dimen/list_view_detail_large_text" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Album Title"
                     android:id="@+id/tv_album_title"
-                    android:layout_gravity="center_horizontal"
-                    android:textSize="@dimen/title" />
+                    android:layout_gravity="center_horizontal" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -81,25 +79,23 @@
                     android:text="Track Title"
                     android:id="@+id/tv_track_title"
                     android:layout_gravity="center_horizontal"
-                    android:textSize="@dimen/title"
                     android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp">
 
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight=".3"
-                    android:padding="10dp"
-                    android:paddingTop="20dp">
+                    android:layout_weight=".5" >
 
                     <ImageView
-                        android:layout_width="fill_parent"
+                        android:layout_width="match_parent"
                         android:layout_height="fill_parent"
                         android:id="@+id/iv_album_art"
                         android:layout_gravity="center_horizontal" />
@@ -108,31 +104,31 @@
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight=".7"
-                    >
+                    android:layout_weight=".5">
 
                     <LinearLayout
                         android:orientation="vertical"
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:id="@+id/linearLayout" >
+                        >
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:id="@+id/tv_track_duration"
                             android:text="Track Duration"
-                            android:textSize="@dimen/title" />
+                            android:textSize="@dimen/title"
+                            android:gravity="center_horizontal" />
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:text="Elapsed Time"
                             android:id="@+id/tv_elapsed_time"
-                            android:gravity="fill_horizontal|center_vertical"
-                            android:layout_gravity="center"
+                            android:gravity="center_horizontal"
                             android:textSize="@dimen/title" />
+
                     </LinearLayout>
                 </FrameLayout>
             </LinearLayout>
@@ -143,7 +139,7 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight=".8">
+            android:layout_weight=".5">
 
             <SeekBar
                 style="?android:attr/progressBarStyleHorizontal"

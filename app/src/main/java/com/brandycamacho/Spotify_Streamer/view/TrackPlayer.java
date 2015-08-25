@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.Menu;
@@ -15,10 +16,26 @@ import com.brandycamacho.Spotify_Streamer.controller.AudioService;
 
 public class TrackPlayer extends FragmentActivity {
     private static ShareActionProvider mShareActionProvider;
+    boolean firstRun = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // We need a way to communicate with upNaviation to provide R.Id for actionBar
+        getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
+                int stackHeight = getSupportFragmentManager().getBackStackEntryCount();
+                if (stackHeight > 0) { // if we have something on the stack (doesn't include the current shown fragment)
+                    getActionBar().setHomeButtonEnabled(true);
+                    getActionBar().setDisplayHomeAsUpEnabled(true);
+                } else {
+                    getActionBar().setDisplayHomeAsUpEnabled(false);
+                    getActionBar().setHomeButtonEnabled(false);
+                }
+            }
+
+        });
         setContentView(R.layout.activity_track_player);
 
     }
@@ -36,7 +53,12 @@ public class TrackPlayer extends FragmentActivity {
         mShareActionProvider = (ShareActionProvider) menu.findItem(R.id.action_share).getActionProvider();
         // Fetch and store ShareActionProvider
         mShareActionProvider.setShareIntent(getDefaultShareIntent());
-        timerHandler.postDelayed(runMenuUpdate, 1000);
+        if (firstRun) {
+            timerHandler.postDelayed(runMenuUpdate, 1000);
+            firstRun = false;
+        } else {
+            timerHandler.postDelayed(runMenuUpdate, 4000);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -47,7 +69,8 @@ public class TrackPlayer extends FragmentActivity {
         public void run() {
             if (!cancelHack) {
                 invalidateOptionsMenu();
-                    timerHandler.postDelayed(runMenuUpdate, 1500);
+//                cancelHack = true;
+//                    timerHandler.postDelayed(runMenuUpdate, 1500);
             }
         }
     };
@@ -70,7 +93,10 @@ public class TrackPlayer extends FragmentActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         switch (id) {
-
+            case android.R.id.home:
+                Log.v("MENU", "----------> Finish was called <-----------");
+                super.onBackPressed();
+                return true;
             case 1:
                 Log.v("ACTIONBAR_MENU", "Stop track request");
                 Intent i = new Intent("stopTrack");

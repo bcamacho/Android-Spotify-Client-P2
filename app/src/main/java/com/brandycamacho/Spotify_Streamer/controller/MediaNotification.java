@@ -9,6 +9,7 @@ import android.support.v4.app.NotificationCompat;
 import android.widget.RemoteViews;
 
 import com.brandycamacho.Spotify_Streamer.R;
+import com.brandycamacho.Spotify_Streamer.view.MainStreamerActivity;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -25,11 +26,19 @@ public class MediaNotification {
     public MediaNotification(Context ctx, String artistName, String trackName, String albumArt) {
         this.parent = ctx;
 
+        // Intent to return to application after selecting notification
+        Intent notificationIntent = new Intent(parent, MainStreamerActivity.class);
+        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        PendingIntent intent = PendingIntent.getActivity(parent, 3, notificationIntent, 0);
+
+        // Configuring remoteView for Notification builder
         remoteView = new RemoteViews(parent.getPackageName(), R.layout.notification);
         remoteView.setImageViewResource(R.id.iv_album_art, 999);
         remoteView.setTextViewText(R.id.tv_artist_name, artistName);
         remoteView.setTextViewText(R.id.tv_track_title, trackName);
 
+
+        // Attaching notification to builder
         nBuilder = new NotificationCompat.Builder(parent)
                 .setContentTitle("Track Notification")
                 .setContentText("Playing track")
@@ -39,6 +48,7 @@ public class MediaNotification {
         //set the button listeners
         setListeners(remoteView);
         nBuilder.setContent(remoteView);
+        nBuilder.setContentIntent(intent);
         notification = nBuilder.build();
         // set big content view for newer androids
         if (android.os.Build.VERSION.SDK_INT >= 16) {

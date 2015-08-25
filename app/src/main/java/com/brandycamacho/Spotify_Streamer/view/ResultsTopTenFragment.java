@@ -142,6 +142,7 @@ public class ResultsTopTenFragment extends Fragment {
                     } else {
                         Intent i = new Intent();
                         i.setClass(getActivity(), TrackPlayer.class);
+                        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         i.putExtra("autoPlay", true);
                         i.putExtras(mArtistBundle);
                         startActivity(i);

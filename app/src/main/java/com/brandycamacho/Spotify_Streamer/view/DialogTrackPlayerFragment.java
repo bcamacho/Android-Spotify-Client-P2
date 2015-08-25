@@ -174,7 +174,7 @@ public class DialogTrackPlayerFragment extends DialogFragment implements View.On
     SeekBar seekbar;
     TextView tv_track_duration, tv_elapsed_time;
     LinearLayout ll;
-    ImageButton btn_settings, btn_share;
+    ImageButton btn_settings, btn_share, btn_up;
     Button btn_stop;
 //    private static ShareActionProvider mShareActionProvider;
 
@@ -201,12 +201,14 @@ public class DialogTrackPlayerFragment extends DialogFragment implements View.On
         tv_track_name = (TextView) v.findViewById(R.id.tv_track_title);
         tv_artist_name = (TextView) v.findViewById(R.id.tv_artist_name);
         iv_album_art = (ImageView) v.findViewById(R.id.iv_album_art);
+        btn_up = (ImageButton) v.findViewById(R.id.btn_up);
         ImageView btn_previous = (ImageButton) v.findViewById(R.id.btn_previous);
         ImageView btn_next = (ImageButton) v.findViewById(R.id.btn_next);
         tv_track_duration = (TextView) v.findViewById(R.id.tv_track_duration);
         btn_stop = (Button)v.findViewById(R.id.btn_stop);
         btn_settings = (ImageButton)v.findViewById(R.id.btn_settings);
         btn_share = (ImageButton)v.findViewById(R.id.btn_share);
+        btn_up.setOnClickListener(this);
         btn_previous.setOnClickListener(this);
         btn_next.setOnClickListener(this);
         seekbar.setOnSeekBarChangeListener(this);
@@ -227,7 +229,7 @@ public class DialogTrackPlayerFragment extends DialogFragment implements View.On
         // Verify saveInstanceState is null otherwise we are returning to activity and must use saveInstanceState to return data to end user
         if (savedInstanceState == null) {
             Log.e(TAG, "No data??? - " + hasStarted);
-            autoPlay = mGetArtistBundle.getBoolean("autoPlay") != false;
+            autoPlay = mGetArtistBundle.getBoolean("autoPlay", false);
         } else {
             autoPlay = false;
             hasStarted = savedInstanceState.getBoolean("hasStarted");
@@ -336,6 +338,10 @@ public class DialogTrackPlayerFragment extends DialogFragment implements View.On
                 break;
             case R.id.btn_share:
                 startActivity(getDefaultShareIntent());
+                break;
+            case R.id.btn_up:
+                getDialog().dismiss();
+                progressDialog.dismiss();
                 break;
         }
     }

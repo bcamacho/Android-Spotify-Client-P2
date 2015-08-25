@@ -51,7 +51,7 @@ public class AudioService extends Service implements MediaPlayer.OnInfoListener,
     public static String artistName, trackTitle, trackUrl, albumArt;
     SharedPreferences sharedPrefs;
     boolean allowNotifications;
-    ArrayList<Artist> mArtistTopTrackList = new ArrayList<>();
+    public static ArrayList<Artist> mArtistTopTrackList = new ArrayList<>();
 
 
     // Timer to prevent user request overload using Spotify API and retrofit

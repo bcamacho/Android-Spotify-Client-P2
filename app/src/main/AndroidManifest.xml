@@ -11,9 +11,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
-    <android:uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <android:uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:icon="@drawable/ic_launcher"
@@ -30,13 +27,23 @@
         <activity
             android:name=".view.TopTenActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/title_activity_top_ten" >
+            android:label="@string/title_activity_top_ten"
+            android:parentActivityName=".view.MainStreamerActivity" >
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".view.MainStreamerActivity" />
         </activity>
         <activity
             android:name=".view.TrackPlayer"
             android:configChanges="keyboardHidden"
             android:label="@string/title_activity_track_player"
-            android:windowSoftInputMode="stateAlwaysHidden" >
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:parentActivityName=".view.TopTenActivity" >
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".view.TopTenActivity" />
         </activity>
         <activity
             android:name=".controller.NotificationReturn"
@@ -50,7 +57,13 @@
 
         <activity
             android:name=".view.DialogTrackPlayer"
-            android:label="@string/title_activity_dialog_track_player" >
+            android:launchMode="singleTop"
+            android:label="@string/title_activity_dialog_track_player"
+            android:parentActivityName=".view.MainStreamerActivity" >
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".view.MainStreamerActivity" />
         </activity>
     </application>
 

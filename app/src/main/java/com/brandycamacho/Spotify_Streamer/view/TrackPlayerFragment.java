@@ -130,6 +130,8 @@ public class TrackPlayerFragment extends Fragment implements View.OnClickListene
     LinearLayout ll;
     View v;
 
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -164,7 +166,11 @@ public class TrackPlayerFragment extends Fragment implements View.OnClickListene
         // Verify saveInstanceState is null otherwise we are returning to activity and must use saveInstanceState to return data to end user
         if (savedInstanceState == null) {
             Log.e(TAG, "No data??? - " + hasStarted);
-            autoPlay = mGetArtistBundle.getBoolean("autoPlay") != false;
+            try {
+                autoPlay = mGetArtistBundle.getBoolean("autoPlay", false);
+            }catch (Exception e){
+                Log.e(TAG, String.valueOf(e));
+            }
         } else {
             autoPlay = false;
             hasStarted = savedInstanceState.getBoolean("hasStarted");
@@ -270,6 +276,7 @@ public class TrackPlayerFragment extends Fragment implements View.OnClickListene
         timerHandler.removeCallbacks(runPlayStatusCheck);
         timerHandler.removeCallbacks(runAutoSetUserSelected);
         timerHandler.removeCallbacks(runUpdateBackgroundImage);
+        progressDialog.dismiss();
         Log.e(TAG, "TrackPlayer Has been destroyed");
     }
 

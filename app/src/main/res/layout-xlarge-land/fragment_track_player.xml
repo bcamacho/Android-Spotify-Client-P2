@@ -157,22 +157,37 @@
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/btn_share"
-            android:src="@android:drawable/ic_menu_share" />
+            android:id="@+id/btn_up"
+            android:src="@drawable/abc_ic_ab_back_mtrl_am_alpha" />
 
-        <Button
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Stop Track"
-            android:id="@+id/btn_stop" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="end">
 
-        <ImageButton
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/btn_settings"
-            android:src="@android:drawable/ic_menu_preferences" />
+            <ImageButton
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_share"
+                android:src="@android:drawable/ic_menu_share" />
+
+            <Button
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Stop Track"
+                android:id="@+id/btn_stop" />
+
+            <ImageButton
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_settings"
+                android:src="@android:drawable/ic_menu_preferences" />
+        </LinearLayout>
+
     </LinearLayout>
 
 </RelativeLayout>

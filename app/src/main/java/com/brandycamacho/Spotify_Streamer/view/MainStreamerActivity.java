@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 
 import com.brandycamacho.Spotify_Streamer.R;
@@ -21,9 +22,26 @@ public class MainStreamerActivity extends ActivityStandardActionBar {
     private Intent mediaPlayerIntent;
     private boolean audioServiceBound = false;
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // We need a way to communicate with upNaviation to provide R.Id for actionBar
+        getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
+                int stackHeight = getSupportFragmentManager().getBackStackEntryCount();
+                if (stackHeight > 0) { // if we have something on the stack (doesn't include the current shown fragment)
+                    getActionBar().setHomeButtonEnabled(true);
+                    getActionBar().setDisplayHomeAsUpEnabled(true);
+                } else {
+                    getActionBar().setDisplayHomeAsUpEnabled(false);
+                    getActionBar().setHomeButtonEnabled(false);
+                }
+            }
+
+        });
+        // set content
         setContentView(R.layout.fragment_container);
     }
 

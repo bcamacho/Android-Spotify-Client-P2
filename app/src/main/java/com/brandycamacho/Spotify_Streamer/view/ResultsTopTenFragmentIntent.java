@@ -123,6 +123,7 @@ public class ResultsTopTenFragmentIntent extends Fragment {
                     Intent i = new Intent();
                     i.setClass(getActivity(), TrackPlayer.class);
                     i.putExtra("autoPlay", true);
+                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     i.putExtras(mArtistBundle);
                     startActivity(i);
                 }

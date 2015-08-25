@@ -31,6 +31,8 @@ public class ActivityStandardActionBar extends FragmentActivity {
     };
     int screenSize;
 
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         actionBarMenu = menu;
@@ -58,6 +60,10 @@ public class ActivityStandardActionBar extends FragmentActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         switch (id) {
+            case android.R.id.home:
+                Log.v("MENU", "----------> Finish was called <-----------");
+                super.onBackPressed();
+                return true;
             case 0:
                 Log.v("ACTIONBAR_MENU", "Settings was selected");
                 DialogSettingsFragment d = DialogSettingsFragment.newInstance();
@@ -80,5 +86,4 @@ public class ActivityStandardActionBar extends FragmentActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
 }

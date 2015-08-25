@@ -276,7 +276,6 @@ public class TrackPlayerFragment extends Fragment implements View.OnClickListene
         timerHandler.removeCallbacks(runPlayStatusCheck);
         timerHandler.removeCallbacks(runAutoSetUserSelected);
         timerHandler.removeCallbacks(runUpdateBackgroundImage);
-        progressDialog.dismiss();
         Log.e(TAG, "TrackPlayer Has been destroyed");
     }
 
